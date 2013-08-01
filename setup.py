@@ -10,7 +10,7 @@ if sys.version_info < (2,7) or sys.version_info >= (3, 0):
 requires = ['tornado']
 
 setup(name='tornadohttpclient',
-      version= '0.1',
+      version= '0.1.1',
       description='Asynchronous http client.',
       long_description="TornadoHTTPClient 是一个基于Tornado的高效的异步HTTP客户端库, 支持Cookie和代理",
       author='cold',

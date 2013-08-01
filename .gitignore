@@ -12,3 +12,4 @@ tags
 logs/
 conf.py
 build/
+dist/
