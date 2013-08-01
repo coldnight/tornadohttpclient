@@ -41,6 +41,46 @@ http.start()
 
 通过`callback`关键字参数我们可以传进一个回调函数, 当请求成功时会调用此函数, 并给此函数传递一个与`urllib2.urlopen`返回一样的reponse实例
 
+### 给callback传递参数
+有时候callback可能需要访问局部变量, 可以通过 `args`和`kwargs`关键字参数, 将`callback`的参数传递给`get`/`post`方法, `args`参数将会在`response`参数之后被传递,
+`args`参数类型应当是一个元组, `kwargs`参数类型应当是一个字典
+```python
+from tornadohttpclient import TornadoHTTPClient
+
+http = TornadoHTTPClient()
+
+def callback(response, times):
+    print response.read()
+    print times
+
+    if times == 9:
+        http.stop()
+
+for i in range(10):
+    http.get("http://www.linuxzen.com", callback = callback, args = (i, ))
+
+http.start()
+```
+
+### 发送延迟请求
+有时我们需要延迟几秒也发送请求或每隔几秒就发送一个请求, `get`/`post`方法的`delay`关键字参数可以解决, `delay`参数接受一个单位为秒的数字, 并延迟`delay`秒后发起请求
+```python
+from tornadohttpclient import TornadoHTTPClient
+
+http = TornadoHTTPClient()
+
+def callback(response, times):
+    print response.read()
+    if times < 9:
+        # 延迟10秒发送此请求
+        http.get("http://www.linuxzen.com", callback = callback, args = (times + 1, ), delay = 10)
+    else:
+        http.stop()
+
+http.get("http://www.linuxzen.com", callback = callback, args = (1, ))
+http.start()
+```
+
 ### 给请求传递参数
 TornadoHTTPClient 的 `get`/`post`方法的第二个参数`params`可以定义请求时传递的参数`params`的类型为字典或者`((key, value), )`类型的元组或列表,例如使用百度搜索`TornadoHTTPClient`
 ```python
