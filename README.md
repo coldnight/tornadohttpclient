@@ -42,7 +42,7 @@ http.start()
 通过`callback`关键字参数我们可以传进一个回调函数, 当请求成功时会调用此函数, 并给此函数传递一个与`urllib2.urlopen`返回一样的reponse实例
 
 ### 给请求传递参数
-TornadoHTTPClient 的 `get`/`post`方法的第二个参数`params`可以定义请求时传递的参数`params`的类型为字典 后者`((key, value), )`类型的元组或列表,例如使用百度搜索`TornadoHTTPClient`
+TornadoHTTPClient 的 `get`/`post`方法的第二个参数`params`可以定义请求时传递的参数`params`的类型为字典或者`((key, value), )`类型的元组或列表,例如使用百度搜索`TornadoHTTPClient`
 ```python
 from tornadohttpclient import TornadoHTTPClient
 
@@ -110,3 +110,6 @@ http.set_proxy("127.0.0.1", 8087)
 http.get("http://shell.appspot.com", callback = callback)
 http.start()
 ```
+
+### Cookie
+TornadoHTTPClient会自动记录和装载Cookie, 可以通过 TornadoHTTPClient实例属性 cookie 获取Cookie
