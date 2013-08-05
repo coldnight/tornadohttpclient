@@ -1,16 +1,12 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
-import sys
 from distutils.core import setup
-
-if sys.version_info < (2,7) or sys.version_info >= (3, 0):
-    raise NotImplementedError("Sorry, you need at least Python 2.7 to use tornadohttpclient.")
 
 
 requires = ['tornado']
 
 setup(name='tornadohttpclient',
-      version= '0.2',
+      version= '0.2.2',
       description='Asynchronous http client.',
       long_description="TornadoHTTPClient 对tornado.curl_httpclient.CurlAsyncHTTPClient的封装, 支持cookie",
       author='cold',
