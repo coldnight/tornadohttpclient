@@ -1,4 +1,4 @@
-TornadoHTTPClient 是一个基于Tornado的高效的异步HTTP客户端库, 支持Cookie和代理
+TornadoHTTPClient 对tornado.curl_httpclient.CurlAsyncHTTPClient的封装, 支持cookie
 
 ## 安装
 ```bash
@@ -42,14 +42,14 @@ http.start()
 通过`callback`关键字参数我们可以传进一个回调函数, 当请求成功时会调用此函数, 并给此函数传递一个与`urllib2.urlopen`返回一样的reponse实例
 
 ### 给callback传递参数
-有时候callback可能需要访问局部变量, 可以通过 `args`和`kwargs`关键字参数, 将`callback`的参数传递给`get`/`post`方法, `args`参数将会在`response`参数之后被传递,
+有时候callback可能需要访问局部变量, 可以通过 `args`和`kwargs`关键字参数, 将`callback`的参数传递给`get`/`post`方法, `args`参数将会在`response`参数之前被传递,
 `args`参数类型应当是一个元组, `kwargs`参数类型应当是一个字典
 ```python
 from tornadohttpclient import TornadoHTTPClient
 
 http = TornadoHTTPClient()
 
-def callback(response, times):
+def callback(times, response):
     print response.read()
     print times
 
@@ -111,6 +111,22 @@ http.post("http://ip.or.domain/login", (("username", "cold"), ("password", "pwd"
 http.start()
 ```
 
+
+## 设置User-Agent
+```python
+from tornadohttpclient import TornadoHTTPClient
+
+http = TornadoHTTPClient()
+http.set_user_agent( "Mozilla/5.0 (X11; Linux x86_64)"\
+                " AppleWebKit/537.11 (KHTML, like Gecko)"\
+                " Chrome/23.0.1271.97 Safari/537.11")
+
+def callback(response):
+    print response.read()
+    http.stop()
+
+http.get("http://www.linuxzen.com", headers=headers, callback = callback)
+```
 
 ### 指定HTTP头
 TornadoHTTPClient 的`get`/`post`方法的 `headers`关键字参数可以自定额外的HTTP头信息, 参数类型为一个字典
