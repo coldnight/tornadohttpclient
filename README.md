@@ -151,7 +151,7 @@ http.get("http://www.linuxzen.com", headers=headers, callback = callback)
 ```
 
 ### 使用代理
-TornadoHTTPClient 的`set_proxy`方法可以设置代理, 其接受两个参数, 分别是代理的 主机名/ip 代理的端口, `unset_proxy`可以取消代理
+TornadoHTTPClient 的`set_proxy`方法可以设置代理, 其接受四个参数, 分别是代理的 主机名/ip 代理的端口 代理用户名 代理用户密码, 如无认证只传前两个即可, `unset_proxy`可以取消代理
 ```python
 from tornadohttpclient import TornadoHTTPClient
 
