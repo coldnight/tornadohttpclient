@@ -8,9 +8,12 @@
 #
 from __future__ import print_function
 
+import os
 import time
-import atexit
 import pycurl
+import mimetools
+import mimetypes
+import itertools
 import threading
 try:
     from cookielib import Cookie, CookieJar
@@ -118,6 +121,19 @@ class TornadoHTTPClient(CurlAsyncHTTPClient):
         self.fetch(url, callback, **kwargs)
 
 
+    def upload(self, url, field, path, params = {}, mimetype = None,
+               callback = None, **kwargs):
+        method = kwargs.pop("method", "POST")
+        form = UploadForm()
+        [form.add_field(name, value) for name, value in params.items()]
+        _, fname = os.path.split(path)
+        form.add_file(field, fname, open(path, 'r'), mimetype)
+        kwargs.update(body = str(form))
+        kwargs.update(method = method)
+        kwargs.update(headers = {"Content-Type":form.get_content_type()})
+        self.fetch(url, callback, **kwargs)
+
+
     @property
     def cookie(self):
         lst = []
@@ -160,6 +176,56 @@ class TornadoHTTPClient(CurlAsyncHTTPClient):
     def stop(self):
         IOLoop.instance().stop()
 
+
+class UploadForm(object):
+    def __init__(self):
+        self.form_fields = []
+        self.files = []
+        self.boundary = mimetools.choose_boundary()
+        self.content_type = 'multipart/form-data; boundary=%s' % self.boundary
+        return
+
+    def get_content_type(self):
+        return self.content_type
+
+    def add_field(self, name, value):
+        self.form_fields.append((str(name), str(value)))
+        return
+
+    def add_file(self, fieldname, filename, fileHandle, mimetype=None):
+        body = fileHandle.read()
+        if mimetype is None:
+            mimetype = ( mimetypes.guess_type(filename)[0]
+                         or
+                         'applicatioin/octet-stream')
+        self.files.append((fieldname, filename, mimetype, body))
+        return
+
+    def __str__(self):
+        parts = []
+        part_boundary = '--' + self.boundary
+
+        parts.extend(
+            [ part_boundary,
+             'Content-Disposition: form-data; name="%s"' % name,
+             '',
+             value,
+             ]
+            for name, value in self.form_fields)
+        if self.files:
+            parts.extend([
+                part_boundary,
+                'Content-Disposition: form-data; name="%s"; filename="%s"' %\
+                (field_name, filename),
+                'Content-Type: %s' % content_type,
+                '',
+                body,
+            ] for field_name, filename, content_type, body in self.files)
+
+        flattened = list(itertools.chain(*parts))
+        flattened.append('--' + self.boundary + '--')
+        flattened.append('')
+        return '\r\n'.join(flattened)
 
 
 

@@ -82,6 +82,7 @@ class TestTornadoHTTPClient(unittest.TestCase):
 
         def callback(response):
             self.assertEqual(response.request.headers["User-Agent"], user_agent)
+            self.http.stop()
 
         self.http.get("http://www.linuxzen.com", callback = callback)
         self.http.start()
@@ -91,24 +92,41 @@ class TestTornadoHTTPClient(unittest.TestCase):
         def callback(response):
             self.assertEqual(response.request.hdaers["Origin"],
                              headers.get("Origin"))
+            self.http.stop()
 
         self.http.get("http://www.linuxzen.com", callback = callback)
+        self.http.start()
 
 
     def test_cookie(self):
         def callback(response):
             print("cookie >>>>>>>>>>>>>>>>>>", end=" ")
             print(self.http.cookie)
+            self.http.stop()
 
         self.http.get("http://www.baidu.com", callback = callback)
+        self.http.start()
 
 
     def test_cookie_jar(self):
         def callback(response):
             print("cookie jar>>>>>>>>>>>>>>>>>>", end=" ")
             print(self.http.cookiejar)
+            self.http.stop()
 
         self.http.get("http://www.baidu.com", callback = callback)
+        self.http.start()
+
+
+    def test_upload_img(self):
+        def callback(response):
+            print("打开图片链接", end = " ")
+            print(response.effective_url)
+            self.http.stop()
+
+        self.http.upload("http://paste.linuxzen.com", "img", "img_test.png",
+                         callback = callback)
+        self.http.start()
 
 
 def main():
