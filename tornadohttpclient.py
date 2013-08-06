@@ -13,9 +13,9 @@ import atexit
 import pycurl
 import threading
 try:
-    from cookielib import Cookie
+    from cookielib import Cookie, CookieJar
 except ImportError:
-    from http.cookiejar import Cookie  #py3
+    from http.cookiejar import Cookie, CookieJar  #py3
 
 try:
     from urllib import urlencode
@@ -140,6 +140,17 @@ class TornadoHTTPClient(CurlAsyncHTTPClient):
             self._cookie.update({domain:{path:{name:cookie}}})
 
         return self._cookie
+
+
+    @property
+    def cookiejar(self):
+        cookiejar = CookieJar()
+        for domain, items in self.cookie.items():
+            for path, names in items.items():
+                for name, cookie in names.items():
+                    cookiejar.set_cookie(cookie)
+
+        return cookiejar
 
 
     def start(self):

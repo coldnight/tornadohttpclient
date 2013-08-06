@@ -95,6 +95,22 @@ class TestTornadoHTTPClient(unittest.TestCase):
         self.http.get("http://www.linuxzen.com", callback = callback)
 
 
+    def test_cookie(self):
+        def callback(response):
+            print("cookie >>>>>>>>>>>>>>>>>>", end=" ")
+            print(self.http.cookie)
+
+        self.http.get("http://www.baidu.com", callback = callback)
+
+
+    def test_cookie_jar(self):
+        def callback(response):
+            print("cookie jar>>>>>>>>>>>>>>>>>>", end=" ")
+            print(self.http.cookiejar)
+
+        self.http.get("http://www.baidu.com", callback = callback)
+
+
 def main():
     loader = unittest.TestLoader()
     suite = loader.loadTestsFromTestCase(TestTornadoHTTPClient)
