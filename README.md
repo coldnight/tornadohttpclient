@@ -32,7 +32,7 @@ from tornadohttpclient import TornadoHTTPClient
 http = TornadoHTTPClient()
 
 def callback(response):
-    print response.read()
+    print response.body
     http.stop()
 
 http.get("http://www.linuxzen.com", callback = callback)
@@ -50,7 +50,7 @@ from tornadohttpclient import TornadoHTTPClient
 http = TornadoHTTPClient()
 
 def callback(times, response):
-    print response.read()
+    print response.body
     print times
 
     if times == 9:
@@ -70,7 +70,7 @@ from tornadohttpclient import TornadoHTTPClient
 http = TornadoHTTPClient()
 
 def callback(response, times):
-    print response.read()
+    print response.body
     if times < 9:
         # 延迟10秒发送此请求
         http.get("http://www.linuxzen.com", callback = callback, args = (times + 1, ), delay = 10)
@@ -89,7 +89,7 @@ from tornadohttpclient import TornadoHTTPClient
 http = TornadoHTTPClient()
 
 def callback(response):
-    print response.read()
+    print response.body
     http.stop()
 
 http.get("http://www.baidu.com/s", (("wd", "tornado"),), callback = callback)
@@ -103,7 +103,7 @@ from tornadohttpclient import TornadoHTTPClient
 http = TornadoHTTPClient()
 
 def callback(response):
-    print response.read()
+    print response.body
     http.stop()
 
 http.post("http://ip.or.domain/login", (("username", "cold"), ("password", "pwd")), callback = callback)
@@ -122,7 +122,7 @@ http.set_user_agent( "Mozilla/5.0 (X11; Linux x86_64)"\
                 " Chrome/23.0.1271.97 Safari/537.11")
 
 def callback(response):
-    print response.read()
+    print response.body
     http.stop()
 
 http.get("http://www.linuxzen.com", headers=headers, callback = callback)
@@ -139,7 +139,7 @@ from tornadohttpclient import TornadoHTTPClient
 http = TornadoHTTPClient()
 
 def callback(response):
-    print response.read()
+    print response.body
     http.stop()
 
 headers = dict((("User-Agent",
@@ -158,7 +158,7 @@ from tornadohttpclient import TornadoHTTPClient
 http = TornadoHTTPClient()
 
 def callback(response):
-    print response.read()
+    print response.body
     http.unset_proxy()
     http.stop()
 

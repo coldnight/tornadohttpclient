@@ -6,7 +6,7 @@ from distutils.core import setup
 requires = ['tornado']
 
 setup(name='tornadohttpclient',
-      version= '0.2.4',
+      version= '0.2.5',
       description='Asynchronous http client.',
       long_description="TornadoHTTPClient 对tornado.curl_httpclient.CurlAsyncHTTPClient的封装, 支持cookie",
       author='cold',

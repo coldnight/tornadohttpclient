@@ -30,7 +30,6 @@ from functools import partial
 from tornado.curl_httpclient import CurlAsyncHTTPClient
 from tornado.ioloop import IOLoop
 
-COOKIE_FILE = ".cookie_jar"
 
 class TornadoHTTPClient(CurlAsyncHTTPClient):
     def initialize(self, *args, **kwargs):
@@ -40,6 +39,7 @@ class TornadoHTTPClient(CurlAsyncHTTPClient):
         self._user_agent = None
         self.use_cookie = True
         self.debug = False
+        self.verify_ssl = False
 
 
     def set_user_agent(self, user_agent):
@@ -64,8 +64,11 @@ class TornadoHTTPClient(CurlAsyncHTTPClient):
     def wrap_prepare_curl_callback(self, callback):
         def _wrap_prepare_curl_callback(curl):
             if self.use_cookie:
-                curl.setopt(pycurl.COOKIEFILE, COOKIE_FILE)
-                curl.setopt(pycurl.COOKIEJAR, COOKIE_FILE)
+                curl.setopt(pycurl.COOKIEFILE, "")
+                #curl.setopt(pycurl.COOKIEJAR, "")
+
+            if not self.verify_ssl:
+                curl.setopt(pycurl.SSL_VERIFYPEER, 0)
 
             if self.debug:
                 curl.setopt(pycurl.VERBOSE, 1)
