@@ -37,13 +37,19 @@ class TornadoHTTPClient(CurlAsyncHTTPClient):
         self._cookie = {}
         self._proxy = {}
         self._user_agent = None
+        self.keep_alive = True
         self.use_cookie = True
         self.debug = False
-        self.verify_ssl = False
+        self.validate_cert = True
+        self._headers = {}
 
 
     def set_user_agent(self, user_agent):
         self._user_agent = user_agent
+
+
+    def set_global_headers(self, headers):
+        self._headers = headers
 
 
     def set_proxy(self, host, port = 8080, username = None, password = None):
@@ -65,10 +71,8 @@ class TornadoHTTPClient(CurlAsyncHTTPClient):
         def _wrap_prepare_curl_callback(curl):
             if self.use_cookie:
                 curl.setopt(pycurl.COOKIEFILE, "")
-                #curl.setopt(pycurl.COOKIEJAR, "")
+                curl.setopt(pycurl.COOKIEJAR, "")
 
-            if not self.verify_ssl:
-                curl.setopt(pycurl.SSL_VERIFYPEER, 0)
 
             if self.debug:
                 curl.setopt(pycurl.VERBOSE, 1)
@@ -102,7 +106,13 @@ class TornadoHTTPClient(CurlAsyncHTTPClient):
         if callable(callback):
             callback = self.wrap_callback(callback, args, kw)
 
-        super(TornadoHTTPClient, self).fetch(request, callback, **kwargs)
+
+        headers = kwargs.pop("headers", {})
+        headers.update(self._headers)
+        self.keep_alive and headers.update(Connection = "keep-alive")
+        kwargs.update(validate_cert = self.validate_cert)
+
+        super(TornadoHTTPClient, self).fetch(request, callback, headers = headers, **kwargs)
 
 
     def _fetch(self, request, callback, kwargs, delay):
