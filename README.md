@@ -41,6 +41,22 @@ http.start()
 
 通过`callback`关键字参数我们可以传进一个回调函数, 当请求成功时会调用此函数, 并给此函数传递一个与`urllib2.urlopen`返回一样的reponse实例
 
+### 上传文件
+`upload`方法可以上传文件, 其接受一个url和文件的field和文件路径, 还有其他post参数
+```python
+from tornadohttpclient import TornadoHTTPClient
+
+http = TornadoHTTPClient()
+def callback(response):
+    print("打开图片链接", end = " ")
+    print(response.effective_url)
+    http.stop()
+
+http.upload("http://paste.linuxzen.com", "img", "img_test.png",
+                    callback = callback)
+http.start()
+```
+
 ### 给callback传递参数
 有时候callback可能需要访问局部变量, 可以通过 `args`和`kwargs`关键字参数, 将`callback`的参数传递给`get`/`post`方法, `args`参数将会在`response`参数之前被传递,
 `args`参数类型应当是一个元组, `kwargs`参数类型应当是一个字典
