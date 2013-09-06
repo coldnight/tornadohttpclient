@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
-from distutils.core import setup
+from setuptools import setup
 
 
-requires = ['tornado']
+requires = ['tornado', 'pycurl']
 
 setup(name='tornadohttpclient',
-      version= '0.2.9',
+      version= '0.2.10',
       description='Asynchronous http client.',
       long_description="TornadoHTTPClient 对tornado.curl_httpclient.CurlAsyncHTTPClient的封装, 支持cookie",
       author='cold',
@@ -14,6 +14,7 @@ setup(name='tornadohttpclient',
       url='http://www.linuxzen.com',
       py_modules=['tornadohttpclient'],
       #scripts=['tornadohttpclient.py'],
+      install_requires = requires,
       license='Apache 2.0',
       platforms = 'any',
       classifiers=['Development Status :: 3 - Alpha',
