@@ -43,6 +43,23 @@ class TornadoHTTPClient(CurlAsyncHTTPClient):
         self.validate_cert = True
         self._headers = {}
 
+        self._share = pycurl.CurlShare()
+        self._share.setopt(pycurl.SH_SHARE, pycurl.LOCK_DATA_COOKIE)
+        self._share.setopt(pycurl.SH_SHARE, pycurl.LOCK_DATA_DNS)
+        self.setup_curl()
+
+
+    def setup_curl(self):
+        _curls = []
+        for curl in self._curls:
+            curl.setopt(pycurl.SHARE, self._share)
+            if self.use_cookie:
+                curl.setopt(pycurl.COOKIEFILE, "cookie")
+                curl.setopt(pycurl.COOKIEJAR, "cookie_jar")
+
+            _curls.append(curl)
+        self._curls = _curls
+
 
     def set_user_agent(self, user_agent):
         self._user_agent = user_agent
@@ -69,11 +86,6 @@ class TornadoHTTPClient(CurlAsyncHTTPClient):
 
     def wrap_prepare_curl_callback(self, callback):
         def _wrap_prepare_curl_callback(curl):
-            if self.use_cookie:
-                curl.setopt(pycurl.COOKIEFILE, "cookie")
-                curl.setopt(pycurl.COOKIEJAR, "cookie_jar")
-
-
             if self.debug:
                 curl.setopt(pycurl.VERBOSE, 1)
 
