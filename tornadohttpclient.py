@@ -70,8 +70,8 @@ class TornadoHTTPClient(CurlAsyncHTTPClient):
     def wrap_prepare_curl_callback(self, callback):
         def _wrap_prepare_curl_callback(curl):
             if self.use_cookie:
-                curl.setopt(pycurl.COOKIEFILE, "")
-                curl.setopt(pycurl.COOKIEJAR, "")
+                curl.setopt(pycurl.COOKIEFILE, "cookie")
+                curl.setopt(pycurl.COOKIEJAR, "cookie_jar")
 
 
             if self.debug:
@@ -174,7 +174,7 @@ class TornadoHTTPClient(CurlAsyncHTTPClient):
     @property
     def cookiejar(self):
         cookiejar = CookieJar()
-        for domain, items in self.cookie.items():
+        for domain, items in self._cookie.items():
             for path, names in items.items():
                 for name, cookie in names.items():
                     cookiejar.set_cookie(cookie)
