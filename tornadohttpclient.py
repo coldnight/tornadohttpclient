@@ -11,7 +11,10 @@ from __future__ import print_function
 import os
 import time
 import pycurl
-import mimetools
+try:
+    from mimetools import choose_boundary
+except ImportError:
+    from email.generator import _make_boundary as choose_boundary
 import mimetypes
 import itertools
 import threading
@@ -129,7 +132,7 @@ class TornadoHTTPClient(CurlAsyncHTTPClient):
 
     def _fetch(self, request, callback, kwargs, delay):
         if isinstance(threading.currentThread(), threading._MainThread):
-            raise threading.ThreadError, "Can't run this function in _MainThread"
+            raise threading.ThreadError("Can't run this function in _MainThread")
         time.sleep(delay)
         self.fetch(request, callback, **kwargs)
 
@@ -206,7 +209,7 @@ class UploadForm(object):
     def __init__(self):
         self.form_fields = []
         self.files = []
-        self.boundary = mimetools.choose_boundary()
+        self.boundary = choose_boundary()
         self.content_type = 'multipart/form-data; boundary=%s' % self.boundary
         return
 
