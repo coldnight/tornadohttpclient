@@ -23,8 +23,7 @@ def get():
     response = yield http.get("http://www.linuxzen.com")
     print(response.body)
 
-# 异步发出请求
-IOLoop.instance().run_async(get)
+IOLoop.instance().run_sync(get)
 ```
 
 ### 上传文件
@@ -45,8 +44,7 @@ def run():
     print("打开图片链接", end=" ")
     print(response.effective_url)
 
-# 异步发出请求
-IOLoop.instance().run_async(run)
+IOLoop.instance().run_sync(run)
 ```
 
 ### 给请求传递参数
@@ -65,8 +63,7 @@ def run():
     response = yield http.get("http://www.baidu.com/s", (("wd", "tornado"),))
     print(response.effective_url)
 
-# 异步发出请求
-IOLoop.instance().run_async(run)
+IOLoop.instance().run_sync(run)
 ```
 
 以上也使用与POST方法, 比如登录网站
@@ -83,8 +80,7 @@ http = TornadoHTTPClient()
 def run():
     yield http.post("http://ip.or.domain/login", (("username", "cold"), ("password", "pwd")))
 
-# 异步发出请求
-IOLoop.instance().run_async(run)
+IOLoop.instance().run_sync(run)
 ```
 
 
@@ -124,8 +120,7 @@ def run():
 
     yield http.get("http://www.linuxzen.com", headers=headers)
 
-# 异步发出请求
-IOLoop.instance().run_async(run)
+IOLoop.instance().run_sync(run)
 ```
 
 ### 使用代理
@@ -147,8 +142,7 @@ def run():
     print response.body
     http.unset_proxy()
 
-# 异步发出请求
-IOLoop.instance().run_async(run)
+IOLoop.instance().run_sync(run)
 ```
 
 ### Cookie
