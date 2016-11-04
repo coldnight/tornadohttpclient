@@ -34,6 +34,8 @@ import pycurl
 
 from tornado import httputil
 from tornado import httpclient
+from tornado import escape
+from tornado import util
 
 try:
     from tornado.curl_httpclient import CurlAsyncHTTPClient
@@ -145,11 +147,8 @@ class TornadoHTTPClient(CurlAsyncHTTPClient):
 
     def get_request_body(self, content_type, data):
         """ 根据请求内容的类型来获取请求包体 """
-        if isinstance(data, str):
-            return data
-
-        if isinstance(data, unicode):
-            return data.encode("utf8")
+        if isinstance(data, util.basestring_type):
+            return escape.utf8(data)
 
         if content_type is None:
             return self.get_urlencoded_body(data)
@@ -238,7 +237,7 @@ class TornadoHTTPClient(CurlAsyncHTTPClient):
         form = UploadForm()
         [form.add_field(name, value) for name, value in params.items()]
         _, fname = os.path.split(path)
-        form.add_file(field, fname, open(path, 'r'), mimetype)
+        form.add_file(field, fname, open(path, 'rb'), mimetype)
         kwargs.update(body=str(form))
         kwargs.update(method=method)
         kwargs.update(headers={"Content-Type": form.get_content_type()})
@@ -336,7 +335,7 @@ class UploadForm(object):
         flattened = list(itertools.chain(*parts))
         flattened.append('--' + self.boundary + '--')
         flattened.append('')
-        return '\r\n'.join(flattened)
+        return b'\r\n'.join(flattened)
 
 
 
