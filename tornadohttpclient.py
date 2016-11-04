@@ -336,22 +336,3 @@ class UploadForm(object):
         flattened.append('--' + self.boundary + '--')
         flattened.append('')
         return b'\r\n'.join(flattened)
-
-
-
-if __name__ == "__main__":
-    http = TornadoHTTPClient()
-    http.debug = False
-    def callback(response):
-        print(response.headers)
-        print(http.cookie)
-        http.stop()
-
-    http.get("http://www.baidu.com", callback = callback)
-    try:
-        http.start()
-    except KeyboardInterrupt:
-        print("exiting...")
-
-    def show_cookie():
-        print(http.cookie)
