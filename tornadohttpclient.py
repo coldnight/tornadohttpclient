@@ -6,7 +6,8 @@
 #   Date    :   13/08/05 10:49:47
 #   Desc    :
 #
-from __future__ import absolute_import, print_function, division, with_statement
+from __future__ import absolute_import, print_function, division
+from __future__ import with_statement
 
 import os
 import json
@@ -23,7 +24,7 @@ except ImportError:
 try:
     from cookielib import Cookie, CookieJar
 except ImportError:
-    from http.cookiejar import Cookie, CookieJar  #py3
+    from http.cookiejar import Cookie, CookieJar  # py3
 
 try:
     from urllib import urlencode
@@ -57,7 +58,8 @@ class TornadoHTTPClient(CurlAsyncHTTPClient):
             @gen.coroutine
             def get(self):
                 http_client = TornadoHTTPClient()
-                response = yield http_client.get("http://www.google.com", {"s": "word"})
+                response = yield http_client.get("http://www.google.com",
+                                                 {"s": "word"})
                 self.write(response.body)
     """
 
@@ -89,7 +91,7 @@ class TornadoHTTPClient(CurlAsyncHTTPClient):
     def set_global_headers(self, headers):
         self._headers = headers
 
-    def set_proxy(self, host, port = 8080, username = None, password = None):
+    def set_proxy(self, host, port=8080, username=None, password=None):
         assert isinstance(port, (int, long))
         self._proxy["proxy_host"] = host
         self._proxy["proxy_port"] = port
@@ -111,7 +113,7 @@ class TornadoHTTPClient(CurlAsyncHTTPClient):
                 return callback(curl)
         return _wrap_prepare_curl_callback
 
-    def wrap_callback(self, callback,  args = (), kwargs = {}):
+    def wrap_callback(self, callback,  args=(), kwargs={}):
         return partial(callback, *args, **kwargs)
 
     def get_url(self, url, params):
@@ -182,7 +184,8 @@ class TornadoHTTPClient(CurlAsyncHTTPClient):
         else:
             url_params = kwargs.pop("url_params", {})
             if not kwargs.get('body'):
-                kwargs["body"] = self.get_request_body(headers.get("content-type"), data)
+                kwargs["body"] = self.get_request_body(
+                    headers.get("content-type"), data)
 
         curl_callback = kwargs.pop("prepare_curl_callback", None)
         curl_callback = self.wrap_prepare_curl_callback(curl_callback)
@@ -263,10 +266,15 @@ class TornadoHTTPClient(CurlAsyncHTTPClient):
                             path_specified.lower() == "true", False, expires,
                             False, None, None, {})
 
-            self._cookie.update({domain:{path:{name:cookie}}})
+            self._cookie.update({
+                domain: {
+                    path: {
+                        name: cookie
+                    }
+                }
+            })
 
         return self._cookie
-
 
     @property
     def cookiejar(self):
@@ -278,10 +286,8 @@ class TornadoHTTPClient(CurlAsyncHTTPClient):
 
         return cookiejar
 
-
     def start(self):
         IOLoop.instance().start()
-
 
     def stop(self):
         IOLoop.instance().stop()
@@ -305,9 +311,8 @@ class UploadForm(object):
     def add_file(self, fieldname, filename, fileHandle, mimetype=None):
         body = fileHandle.read()
         if mimetype is None:
-            mimetype = ( mimetypes.guess_type(filename)[0]
-                         or
-                         'applicatioin/octet-stream')
+            mimetype = (mimetypes.guess_type(filename)[0] or
+                        'applicatioin/octet-stream')
         self.files.append((fieldname, filename, mimetype, body))
         return
 
@@ -316,17 +321,17 @@ class UploadForm(object):
         part_boundary = '--' + self.boundary
 
         parts.extend(
-            [ part_boundary,
-             'Content-Disposition: form-data; name="%s"' % name,
-             '',
-             value,
-             ]
-            for name, value in self.form_fields)
+            [
+                part_boundary,
+                'Content-Disposition: form-data; name="%s"' % name,
+                '',
+                value,
+            ] for name, value in self.form_fields)
         if self.files:
             parts.extend([
                 part_boundary,
-                'Content-Disposition: form-data; name="%s"; filename="%s"' %\
-                (field_name, filename),
+                'Content-Disposition: form-data; name="%s"; filename="%s"' % (
+                    field_name, filename),
                 'Content-Type: %s' % content_type,
                 '',
                 body,
