@@ -13,3 +13,4 @@ logs/
 conf.py
 build/
 dist/
+.tox/
