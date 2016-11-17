@@ -275,7 +275,7 @@ class TornadoHTTPClient(CurlAsyncHTTPClient):
     @property
     def cookiejar(self):
         cookiejar = CookieJar()
-        for domain, items in self._cookie.items():
+        for domain, items in self.cookie.items():
             for path, names in items.items():
                 for name, cookie in names.items():
                     cookiejar.set_cookie(cookie)
