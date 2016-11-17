@@ -7,7 +7,7 @@ requires = ['tornado', 'pycurl']
 
 setup(
     name='tornadohttpclient',
-    version='1.1.0',
+    version='1.1.1',
     description='Asynchronous http client.',
     long_description=("TornadoHTTPClient 对"
                       "tornado.curl_httpclient.CurlAsyncHTTPClient的封装, "
@@ -29,5 +29,7 @@ setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.0',
         'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
         ],
      )
