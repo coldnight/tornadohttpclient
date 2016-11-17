@@ -305,7 +305,8 @@ class UploadForm(object):
         return
 
     def add_file(self, fieldname, filename, fileHandle, mimetype=None):
-        body = fileHandle.read()
+        # use str convert to str to compatible with py35
+        body = str(fileHandle.read())
         if mimetype is None:
             mimetype = (mimetypes.guess_type(filename)[0] or
                         'applicatioin/octet-stream')
@@ -336,4 +337,4 @@ class UploadForm(object):
         flattened = list(itertools.chain(*parts))
         flattened.append('--' + self.boundary + '--')
         flattened.append('')
-        return b'\r\n'.join(flattened)
+        return '\r\n'.join(flattened)
