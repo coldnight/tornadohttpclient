@@ -266,13 +266,9 @@ class TornadoHTTPClient(CurlAsyncHTTPClient):
                             path_specified.lower() == "true", False, expires,
                             False, None, None, {})
 
-            self._cookie.update({
-                domain: {
-                    path: {
-                        name: cookie
-                    }
-                }
-            })
+            self._cookie.setdefault(domain, {})
+            self._cookie[domain].setdefault(path, {})
+            self._cookie[domain][path].update({name: cookie})
 
         return self._cookie
 
