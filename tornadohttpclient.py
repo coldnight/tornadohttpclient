@@ -92,7 +92,7 @@ class TornadoHTTPClient(CurlAsyncHTTPClient):
         self._headers = headers
 
     def set_proxy(self, host, port=8080, username=None, password=None):
-        assert isinstance(port, (int, long))
+        assert isinstance(port, int)
         self._proxy["proxy_host"] = host
         self._proxy["proxy_port"] = port
         if username:

@@ -196,6 +196,9 @@ class TornadoHTTPClientCoroutineTest(testing.AsyncTestCase):
         print("打开图片链接", end = " ")
         print(resp.effective_url)
 
+    def test_set_proxy(self):
+        self.http.set_proxy('127.0.0.1')
+
 
 def main():
     loader = unittest.TestLoader()
